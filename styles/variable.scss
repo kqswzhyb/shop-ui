@@ -1,0 +1,21 @@
+@for $i from 1 through 100 {
+  .mb#{$i} { margin-bottom: 2rpx * $i; }
+  .ml#{$i} { margin-left: 2rpx * $i; }
+  .mr#{$i} { margin-right:2rpx * $i; }
+  .mt#{$i} { margin-top: 2rpx * $i; }
+  .mx#{$i} { margin: 0 2rpx * $i; }
+  .my#{$i} { margin: 2rpx * $i 0; }
+  .pb#{$i} { padding-bottom: 2rpx * $i; }
+  .pl#{$i} { padding-left: 2rpx * $i; }
+  .pr#{$i} { padding-right:2rpx * $i; }
+  .pt#{$i} { padding-top: 2rpx * $i; }
+  .px#{$i} { padding: 0 2rpx * $i; }
+  .py#{$i} { padding: 2rpx * $i 0; }
+  .w#{$i} { width: 2rpx * $i; }
+  .h#{$i} { height: 2rpx * $i; }
+  .fs#{$i} { font-size: 2rpx * $i; }
+}
+
+.white {
+	color:#fff;
+}
