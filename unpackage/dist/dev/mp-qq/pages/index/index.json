@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "uni-app",
-  "usingComponents": {
-    "tui-icon": "/ThorUI-components/thorui/tui-icon/tui-icon"
-  }
-}

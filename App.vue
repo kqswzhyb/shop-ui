@@ -13,7 +13,6 @@
 					})
 				}
 			});
-			console.log('App Launch')
 		},
 		onLoad: function() {
 			console.log('load')

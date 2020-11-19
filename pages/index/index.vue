@@ -25,6 +25,13 @@
 				</view>
 			</swiper-item>
 		</swiper>
+		<view class="product-list">
+			<view v-for="item in productList.slice(0,6)" :key="item.productList" class="product-cell">
+				<image :src="item.fileRecordList[0].fileFullPath" class="product-img" mode="aspectFit"></image>
+				<p class="fs14 px10">{{item.name}}</text>
+				<p class="fs14 px10" style="color:#FF0000;"><span class="fs16">￥</span>{{item.productgList[0].price}}</p>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -32,31 +39,36 @@
 	import {
 		mapGetters
 	} from 'vuex'
+	import url from '../../api/index.js'
 	export default {
 		data() {
 			return {
 				indicatorDots: true,
 				autoplay: true,
 				interval: 2000,
-				duration: 500
+				duration: 500,
+				productList:[]
 			}
 		},
 		computed: {
 			...mapGetters(['location'])
 		},
 		onLoad() {
-
+			this.getPorductList()
 		},
 		methods: {
-
+			getPorductList() {
+				this.tui.request(url.productList,"get").then(res=>{
+					this.productList=res.data.records
+					console.log(this.productList)
+				})
+			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.content {
-		height: 2000px;
-
 		.header-view {
 			position: fixed;
 			top: 0;
@@ -68,7 +80,7 @@
 			background-color: #d43c33;
 			z-index: 99;
 			.uni-input {
-				width: calc(100% - 260rpx);
+				width: calc(100% - 270rpx);
 				margin-right: 50rpx;
 				background-color: #fff;
 				border-radius: 20rpx;
@@ -84,6 +96,19 @@
 				width:100%;
 			}
 		}
-
+		.product-list {
+			margin-top:40rpx;
+			width: 100%;
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			.product-cell {
+				border: 1px solid #eee;
+				.product-img {
+					width: 30vw;
+					height: 30vw;
+				}
+			}
+		}
 	}
 </style>

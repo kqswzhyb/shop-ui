@@ -9,7 +9,7 @@ const store = new Vuex.Store({
 		//用户登录手机号
 		mobile: uni.getStorageSync("thorui_mobile") || "echo.",
 		//是否登录 项目中改为真实登录信息判断，如token
-		isLogin: uni.getStorageSync("thorui_mobile") ? true : false,
+		isLogin: uni.getStorageSync("userInfo") ? true : false,
 		//登录后跳转的页面路径 + 页面参数
 		returnUrl: "",
 		//app版本
@@ -21,7 +21,8 @@ const store = new Vuex.Store({
 		location: {}
 	},
 	getters: {
-		location: state => state.location
+		location: state => state.location,
+		isLogin: state => state.isLogin
 	},
 	mutations: {
 		login(state, payload) {
