@@ -1,4 +1,5 @@
 	
 export default{
-	productList : "/product/list"
+	productList : "/product/list",
+	bannerList : "/banner/list"
 } 
