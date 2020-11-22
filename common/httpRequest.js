@@ -95,7 +95,7 @@ const tui = {
 				data: postData,
 				header: {
 					'content-type': isForm ? 'application/x-www-form-urlencoded' : 'application/json',
-					'Authorization': tui.getToken()
+					'Authorization': 'Bearer '+tui.getToken()
 				},
 				method: method, //'GET','POST'
 				dataType: 'json',
@@ -115,6 +115,12 @@ const tui = {
 					// 	})
 					// 	return
 					// }
+					if(res.statusCode===401) {
+						tui.modal("登录信息已失效，请重新登录", false, () => {
+							uni.removeStorageSync("token")
+						})
+						reject(res)
+					}
 					resolve(res.data)
 				},
 				fail: (res) => {
@@ -141,7 +147,7 @@ const tui = {
 				filePath: src,
 				name: 'imageFile',
 				header: {
-					'Authorization': tui.getToken()
+					'Authorization': 'Bearer '+tui.getToken()
 				},
 				formData: {
 					// sizeArrayText:""
@@ -177,15 +183,15 @@ const tui = {
 	//设置用户信息
 	setUserInfo: function(mobile, token) {
 		//uni.setStorageSync("thorui_token", token)
-		uni.setStorageSync("thorui_mobile", mobile)
+		uni.setStorageSync("userInfo", mobile)
 	},
 	//获取token
 	getToken() {
-		return uni.getStorageSync("thorui_token")
+		return uni.getStorageSync("token")
 	},
 	//判断是否登录
 	isLogin: function() {
-		return uni.getStorageSync("thorui_mobile") ? true : false
+		return uni.getStorageSync("token") ? true : false
 	},
 	//跳转页面，校验登录状态
 	href(url, isVerify) {
