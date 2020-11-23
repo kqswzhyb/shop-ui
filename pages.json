@@ -44,6 +44,7 @@
             "path" : "pages/product/product",
             "style" :                                                                                    
             {
+				"navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
             
@@ -52,7 +53,7 @@
             "path" : "pages/productList/productList",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "热销",
                 "enablePullDownRefresh": true
             }
             

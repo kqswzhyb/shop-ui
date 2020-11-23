@@ -2,7 +2,7 @@
  * 常用方法封装 请求，文件上传等
  * @author echo. 
  **/
-
+import store from '../store'
 const tui = {
 	//接口地址
 	interfaceUrl: function() {
@@ -119,6 +119,8 @@ const tui = {
 						tui.modal("登录信息已失效，请重新登录", false, () => {
 							uni.removeStorageSync("token")
 						})
+						uni.removeStorageSync("token")
+						store.commit('logout')
 						reject(res)
 					}
 					resolve(res.data)

@@ -1,16 +1,26 @@
 <template>
 	<view class="number-picker">
-		<view class="number-button" @tap="num+=1">+</view>
-		<input class="uni-input" type="number" :value="num" :min="1" />
 		<view class="number-button" @tap="subNumber">-</view>
+		<input class="uni-input" type="number" :value="num" :min="0" :max="max" />
+		<view class="number-button" @tap="addNumber">+</view>
 	</view>
 </template>
 
 <script>
 	export default {
+		props: {
+			max: {
+				type: Number,
+				default: 0
+			},
+			number: {
+				type: Number,
+				default: 0
+			}
+		},
 		data() {
 			return {
-				num: 1
+				num: 0
 			}
 		},
 		methods: {
@@ -19,10 +29,21 @@
 					this.num -= 1
 				}
 			},
+			addNumber() {
+				if (this.num <= this.max - 1) {
+					this.num += 1
+				}
+			},
+			setNum(val) {
+				this.num = val
+			}
 		},
 		watch: {
 			num(val) {
 				this.$emit("update", this.num)
+			},
+			number(val) {
+				this.num = val
 			}
 		}
 	}

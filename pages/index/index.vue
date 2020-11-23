@@ -120,14 +120,14 @@
 			display: flex;
 			align-items: center;
 			flex-wrap: wrap;
-			margin-bottom: 56rpx;
-
+			padding-bottom: 56rpx;
+			background-color: #f7f7f7;
 			.product-cell {
 				margin-top: 40rpx;
 				margin-left:calc(4vw - 6px);
 				margin-right:calc(4vw - 6px);
 				border: 1px solid #eee;
-
+				background-color: #fff;
 				.product-img {
 					width: 44vw;
 					height: 44vw;
