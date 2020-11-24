@@ -42,8 +42,11 @@
 			num(val) {
 				this.$emit("update", this.num)
 			},
-			number(val) {
-				this.num = val
+			number: {
+				handler(val) {
+					this.num = val
+				},
+				immediate: true
 			}
 		}
 	}

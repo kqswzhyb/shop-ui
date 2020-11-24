@@ -22,10 +22,10 @@
 		</view>
 		<view class="footer">
 			<div class="footer-button">
-				<tui-button type="danger" height="66rpx">加入购物车</tui-button>
+				<tui-button type="danger" height="66rpx" :preventClick="true" @tap="addProduct">加入购物车</tui-button>
 			</div>
 			<div class="footer-button">
-				<tui-button type="warning" height="66rpx">立即购买</tui-button>
+				<tui-button type="warning" height="66rpx" :preventClick="true">立即购买</tui-button>
 			</div>
 		</view>
 		<tui-drawer mode="bottom" :visible="bottomPopup" @close="closeDrawer">
@@ -98,6 +98,18 @@
 			}
 		},
 		methods: {
+			addProduct() {
+				if(this.number<1) {
+					this.tui.toast('请至少选择1个商品', 3000);
+					return
+				}
+				this.tui.request(url.addToShopcart,'post',{
+					cartNumber: this.number,
+					productgId:this.productgId,
+				}).then(res=>{
+					this.tui.toast('已成功加入购物车', 3000);
+				})
+			},
 			changeTab(val) {
 				this.currentTab = val.index
 			},
