@@ -130,6 +130,9 @@ const tui = {
 					tui.delayed = null;
 					tui.toast("网络不给力，请稍后再试~")
 					reject(res)
+				},
+				complete() {
+					uni.hideLoading()
 				}
 			})
 		})

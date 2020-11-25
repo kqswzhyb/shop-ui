@@ -103,7 +103,7 @@
 					this.tui.toast('请至少选择1个商品', 3000);
 					return
 				}
-				this.tui.request(url.addToShopcart,'post',{
+				this.tui.request(url.addToShopcart,'POST',{
 					cartNumber: this.number,
 					productgId:this.productgId,
 				}).then(res=>{
@@ -134,7 +134,7 @@
 			},
 			getPorductList(id) {
 				return new Promise((resolve) => {
-					this.tui.request(url.productList, "get", {
+					this.tui.request(url.productList, "GET", {
 						saleStatus: '1',
 						productId: id
 					}).then(res => {

@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="bg">
 		<view class="user-info">
 			<view class="avatar-view" @tap="goLogin">
 				<image class="avatar" src="" mode="aspectFit"></image>
@@ -8,6 +8,9 @@
 			<text @tap="goLogin">{{isLogin?userInfo.nickName:'请先登录'}}</text>
 		</view>
 		<tui-tabs :tabs="navbar" :currentTab="currentTab" selectedColor="#EB0909" sliderBgColor="#EB0909" @change="changeTab"></tui-tabs>
+		<view class="order-list">
+			<noData/>
+		</view>
 	</view>
 </template>
 
@@ -15,7 +18,11 @@
 	import {
 		mapGetters
 	} from 'vuex'
+	import noData from '../../components/noData'
 	export default {
+		components:{
+			noData
+		},
 		data() {
 			return {
 				currentTab: 0,
@@ -50,6 +57,9 @@
 </script>
 
 <style lang="scss" scoped>
+	.bg {
+		background-color: #f7f7f7;
+	}
 	.user-info {
 		width: 100vw;
 		padding: 30rpx;
@@ -70,5 +80,8 @@
 			height: 20vw;
 
 		}
+	}
+	.order-list {
+		height: calc(100vh - 294rpx);
 	}
 </style>

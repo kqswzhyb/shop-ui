@@ -37,7 +37,7 @@
 				}).then(async res => {
 					if (res.data) {
 						uni.setStorageSync('token', res.data);
-						const result = await this.tui.request(url.userInfo, "get", {
+						const result = await this.tui.request(url.userInfo, "GET", {
 							mode: "user"
 						})
 						this.$store.commit('setUserInfo', result.data.info)

@@ -66,14 +66,14 @@
 				})
 			},
 			getPorductList() {
-				this.tui.request(url.productList, "get", {
+				this.tui.request(url.productList, "GET", {
 					saleStatus: '1'
 				}).then(res => {
 					this.productList = this.productList.concat(res.data.records.slice(0,6))
 				})
 			},
 			getBannerList() {
-				this.tui.request(url.bannerList, "get", {
+				this.tui.request(url.bannerList, "GET", {
 					place: 'home'
 				}).then(res => {
 					this.bannerList = res.data.records.sort((a, b) => Number(a.sort) - Number(b.sort))

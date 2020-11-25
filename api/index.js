@@ -5,5 +5,8 @@ export default{
 	login:"/login",
 	userInfo:"/user/info",
 	addToShopcart:"/shopcart/add",
-	shopcartList:"/shopcart/list"
+	shopcartList:"/shopcart/list",
+	updateShopcart:"/shopcart/update",
+	clearShopcart:"/shopcart/deleteByUser",
+	batchDeleteShopcart:"/shopcart/batchDelete"
 } 

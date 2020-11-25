@@ -31,7 +31,7 @@
 		methods: {
 			getPorductList() {
 				return new Promise((resolve) => {
-					this.tui.request(url.productList, "get", {
+					this.tui.request(url.productList, "GET", {
 						saleStatus: '1',
 						name: this.name,
 						...this.page
