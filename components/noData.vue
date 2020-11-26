@@ -1,18 +1,27 @@
 <template>
 	<view class="no-data" v-if="!isLogin">
-		<text class="fs24">请先登录</text>
+		<text class="fs24">{{text}}</text>
 	</view>
 </template>
 
 <script>
-	import {mapGetters} from 'vuex'
+	import {
+		mapGetters
+	} from 'vuex'
 	export default {
+		props: {
+			text: {
+				type: String,
+				default: '请先登录'
+			}
+
+		},
 		data() {
 			return {
-				
+
 			}
 		},
-		computed:{
+		computed: {
 			...mapGetters(["isLogin"])
 		}
 	}

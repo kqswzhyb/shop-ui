@@ -1,11 +1,15 @@
 <template>
 	<view class="bg">
 		<view class="user-info">
-			<view class="avatar-view" @tap="goLogin">
-				<image class="avatar" src="" mode="aspectFit"></image>
+			<view style="display: flex;align-items: center;">
+				<view class="avatar-view" @tap="goLogin">
+					<image class="avatar" src="" mode="aspectFit"></image>
+				</view>
+				
+				<text @tap="goLogin">{{isLogin?userInfo.nickName:'请先登录'}}</text>
 			</view>
-
-			<text @tap="goLogin">{{isLogin?userInfo.nickName:'请先登录'}}</text>
+			<tui-icon name="house" size="25" class="mr40" color="#fff" @tap="goAddress"/>
+			
 		</view>
 		<tui-tabs :tabs="navbar" :currentTab="currentTab" selectedColor="#EB0909" sliderBgColor="#EB0909" @change="changeTab"></tui-tabs>
 		<view class="order-list">
@@ -42,6 +46,13 @@
 		},
 		onLoad() {},
 		methods: {
+			goAddress() {
+				if (this.isLogin) {
+					uni.navigateTo({
+						url: '../address/address'
+					})
+				}
+			},
 			changeTab(val) {
 				this.currentTab = val.index
 			},
@@ -65,6 +76,7 @@
 		padding: 30rpx;
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 		background-color: #f50;
 
 		.avatar-view {
