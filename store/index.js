@@ -19,12 +19,16 @@ const store = new Vuex.Store({
 		isOnline: false,
 		userInfo:{},
 		//
-		location: {}
+		location: {},
+		order:[],
+		address:[]
 	},
 	getters: {
 		location: state => state.location,
 		userInfo: state => state.userInfo,
-		isLogin: state => state.isLogin
+		isLogin: state => state.isLogin,
+		order: state => state.order,
+		address: state => state.address
 	},
 	mutations: {
 		login(state, payload) {
@@ -52,6 +56,12 @@ const store = new Vuex.Store({
 		},
 		setUserInfo(state, payload) {
 			state.userInfo = payload
+		},
+		setOrder(state, payload) {
+			state.order = payload
+		},
+		setAddress(state, payload) {
+			state.address = payload
 		}
 	},
 	actions: {

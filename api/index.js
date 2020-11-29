@@ -11,4 +11,9 @@ export default {
 		areaList: "/position/area/",
 		cityList: "/position/city/",
 		provinceList: "/position/province/",
+		addressList:"/user/addressList",
+		addAddress:"/user/saveAddress",
+		updateAddress:"/user/updateAddress",
+		deleteAddress:"/user/deleteAddressById",
+		getAddressById:"/user/address/"
 	}

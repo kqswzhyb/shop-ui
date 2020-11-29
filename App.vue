@@ -6,6 +6,7 @@
 				mode: "user"
 			}).then(res=>{
 				this.$store.commit('setUserInfo', res.data.info)
+				this.$store.commit('setAddress', res.data.address)
 			})
 			// uni.getLocation({
 			// 	type: 'wgs84',

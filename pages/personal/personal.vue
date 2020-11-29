@@ -12,6 +12,20 @@
 			
 		</view>
 		<tui-tabs :tabs="navbar" :currentTab="currentTab" selectedColor="#EB0909" sliderBgColor="#EB0909" @change="changeTab"></tui-tabs>
+		<view class="list-view" v-for="item in orderList" :key="item.orderId">
+			<view class="list-cell" v-for="v in orderDetailList" :key="v.orderDetailId">
+				<view :style="{background:`url(${v.imgUrl}) no-repeat center center`}"
+				 class="product-img" @tap="goProduct(v.productId)"></view>
+				<view class="product-right">
+					<view @tap="goProduct(v.productId)">
+						<p class="fs16 radio">{{v.productName}}</p>
+						<p class="fs14 grey">{{v.attrs}}</p>
+						<p class="fs14 red">￥{{v.originPrice}} X{{v.productUnit}}</p>
+					</view>
+				</view>
+			</view>
+			<p>总额：<text>{{item.productTotalAmount}}</text> 实付额：<text>{{item.actualPayAmount}}</text></p>
+		</view>
 		<view class="order-list">
 			<noData/>
 		</view>
@@ -39,6 +53,7 @@
 				}, {
 					name: "已完成"
 				}],
+				orderList:[]
 			};
 		},
 		computed: {
@@ -55,6 +70,11 @@
 			},
 			changeTab(val) {
 				this.currentTab = val.index
+			},
+			goProduct(id) {
+				uni.navigateTo({
+					url: `../product/product?id=${id}`
+				})
 			},
 			goLogin() {
 				if (!this.isLogin) {
@@ -95,5 +115,36 @@
 	}
 	.order-list {
 		height: calc(100vh - 294rpx);
+	}
+	.list-view {
+		margin: 88rpx 20rpx;
+		height: calc(100vh - 176rpx);
+		padding: 2rpx 0;
+	
+		.list-cell {
+			margin-top: 20rpx;
+			display: flex;
+			align-items: center;
+			padding: 16rpx;
+			background-color: #fff;
+			border-radius: 20rpx;
+	
+			.product-img {
+				width: 33vw;
+				height: 33vw;
+				background-size: 30% 30%;
+				border-radius: 20rpx;
+				margin-right: 20rpx;
+			}
+	
+			.product-right {
+				height: 33vw;
+				flex: 1;
+				padding: 10rpx 0;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+		}
 	}
 </style>

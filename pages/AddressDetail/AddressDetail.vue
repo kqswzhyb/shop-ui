@@ -4,32 +4,37 @@
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">收货人</view>
-					<input placeholder-class="tui-phcolor" class="tui-input" name="contactName" placeholder="请输入姓名" maxlength="50"
-					 type="text" />
+					<input placeholder-class="tui-phcolor" :value="form.contactName" @input="e=>form.contactName=e.detail.value" class="tui-input"
+					 name="contactName" placeholder="请输入姓名" maxlength="50" type="text" />
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">手机号</view>
-					<input placeholder-class="tui-phcolor" class="tui-input" name="contactPhone" placeholder="请输入手机号" maxlength="50" type="text" />
+					<input placeholder-class="tui-phcolor" :value="form.contactPhone" class="tui-input" @input="e=>form.contactPhone=e.detail.value"
+					 name="contactPhone" placeholder="请输入手机号" maxlength="50" type="text" />
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false" @tap.native="showPicker">
 				<view class="tui-line-cell">
 					<view class="tui-title">地区</view>
-					<p style="width:100%;height: 100%;" ></p>
+					<p style="width:100%;height: 100%;">{{`${form.provinceName} ${form.cityName} ${form.areaName}`}}</p>
+					<input placeholder-class="tui-phcolor" :value="form.provinceName" class="tui-input" name="provinceId" placeholder="请输入姓名"
+					 maxlength="50" type="hidden" />
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">详情地址</view>
-					<input placeholder-class="tui-phcolor" class="tui-input" name="addressDetail" placeholder="请输入详情地址" maxlength="50" type="text" />
+					<input placeholder-class="tui-phcolor" :value="form.addressDetail" class="tui-input" @input="e=>form.addressDetail=e.detail.value"
+					 name="addressDetail" placeholder="请输入详情地址" maxlength="50" type="text" />
 				</view>
 			</tui-list-cell>
 			<tui-list-cell :hover="false">
 				<view class="tui-line-cell">
 					<view class="tui-title">备注</view>
-					<input placeholder-class="tui-phcolor" class="tui-input" name="remark" placeholder="请输入备注" maxlength="50" type="text" />
+					<input placeholder-class="tui-phcolor" :value="form.remark" class="tui-input" @input="e=>form.remark=e.detail.value"
+					 name="remark" placeholder="请输入备注" maxlength="50" type="text" />
 				</view>
 			</tui-list-cell>
 
@@ -79,26 +84,38 @@
 					addressDetail: '',
 					remark: ''
 				},
-				value: ["110000", "110100", "110101"],
+				value: [0, 0, 0],
 				city: [],
 				province: [],
-				area: []
+				area: [],
+				mode: ''
 			};
 		},
 		methods: {
 			picker() {
-				console.log()
+				const province = this.province[this.value[0]]
+				const city = this.city[this.value[1]]
+				const area = this.area[this.value[2]]
+				this.form.provinceId = province.provinceId
+				this.form.provinceName = province.province
+				this.form.cityId = city.cityId
+				this.form.cityName = city.city
+				this.form.areaId = area.areaId
+				this.form.areaName = area.area
+				this.hidePicker()
 			},
 			columnPicker(e) {
 				let value = e.detail.value;
 				//如果两者下标不一致，表示滚动过
-				console.log(value)
-				if (this.value[0] !== this.province[value[0]].provinceId) {
+				if (this.province[this.value[0]].provinceId !== this.province[value[0]].provinceId) {
 					this.getCity(this.province[value[0]].provinceId)
-				} else if (this.value[1] !== this.city[value[1]].cityId) {
+					this.value[0] = value[0]
+				} else if (this.city[this.value[1]].cityId !== this.city[value[1]].cityId) {
+					this.value[0] = value[0]
+					this.value[1] = value[1]
 					this.getArea(this.city[value[1]].cityId)
 				} else {
-					this.value[2] = this.area[value[2]].areaId
+					this.value[2] = value[2]
 				}
 			},
 			showPicker: function() {
@@ -134,17 +151,27 @@
 					rule: ["required", "isMobile"],
 					msg: ["请输入手机号", "请输入正确的手机号"]
 				}, {
+					name: "provinceId",
+					rule: ["required"],
+					msg: ["请选择省市区"]
+				}, {
 					name: "addressDetail",
 					rule: ["required"],
-					msg: ["请输入邮箱", "请输入正确的邮箱"]
+					msg: ["请输入详情地址"]
 				}, ];
 				//进行表单检查
 				let checkRes = form.validation(e.detail.value, rules);
 				if (!checkRes) {
-					uni.showToast({
-						title: "验证通过!",
-						icon: "none"
-					});
+					this.tui.request(this.mode === 'add' ? url.addAddress : url.updateAddress, this.mode === 'add' ? "POST" : "PUT",
+						this.form).then(res => {
+						uni.showToast({
+							title: "提交成功",
+							icon: "success"
+						});
+						uni.navigateBack({
+							delta: 1
+						})
+					})
 				} else {
 					uni.showToast({
 						title: checkRes,
@@ -153,37 +180,51 @@
 				}
 			},
 			formReset: function(e) {
-				console.log("清空数据")
+				this.init()
 			},
 			async getCity(id) {
-				this.tui.request(url.cityList  + id, 'GET').then(res => {
+				this.tui.request(url.cityList + id, 'GET').then(res => {
 					this.city = res.data
-					this.value[1]=this.city[0].cityId
-					this.tui.request(url.areaList  + this.city[0].cityId, 'GET').then(area => {
+					this.value[1] = 0
+					this.tui.request(url.areaList + this.city[0].cityId, 'GET').then(area => {
 						this.area = area.data
-						this.value[2]=this.area[0].areaId
+						this.value[2] = 0
 					})
 				})
 			},
 			async getArea(id) {
-				this.tui.request(url.areaList  + id, 'GET').then(res => {
+				this.tui.request(url.areaList + id, 'GET').then(res => {
 					this.area = res.data
-					this.value[2]=this.area[0].areaId
+					this.value[2] = 0
 				})
 			}
 		},
-		onLoad(option) {
-			this.tui.request(url.provinceList + '001', 'GET').then(res => {
-				this.province = res.data
-				this.tui.request(url.cityList  + this.province[0].provinceId, 'GET').then(city => {
-					this.city = city.data
-					this.tui.request(url.areaList  + this.city[0].cityId, 'GET').then(area => {
-						this.area = area.data
-					})
-				})
-			})
+		async onLoad(option) {
+			this.mode = option.mode
+			this.init()
+			this.value = [0, 0, 0]
 			if (option.mode === 'add') {
+				const province = await this.tui.request(url.provinceList + '001', 'GET')
+				this.province = province.data
+				const city = await this.tui.request(url.cityList + this.province[0].provinceId, 'GET')
+				this.city = city.data
+				const area = await this.tui.request(url.areaList + this.city[0].cityId, 'GET')
+				this.area = area.data
+
+
 				this.init()
+			} else {
+				this.tui.request(url.getAddressById + option.id, "GET").then(async res => {
+					this.form = res.data
+					const province = await this.tui.request(url.provinceList + '001', 'GET')
+					this.province = province.data
+					const city = await this.tui.request(url.cityList + this.form.provinceId, 'GET')
+					this.city = city.data
+					const area = await this.tui.request(url.areaList + this.form.cityId, 'GET')
+					this.area = area.data
+					this.value = [this.province.findIndex(v => v.provinceId === this.form.provinceId), this.city.findIndex(
+						v => v.cityId === this.form.cityId), this.area.findIndex(v => v.areaId === this.form.areaId)]
+				})
 			}
 		}
 	}

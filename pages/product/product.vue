@@ -25,7 +25,7 @@
 				<tui-button type="danger" height="66rpx" :preventClick="true" @tap="addProduct">加入购物车</tui-button>
 			</div>
 			<div class="footer-button">
-				<tui-button type="warning" height="66rpx" :preventClick="true">立即购买</tui-button>
+				<tui-button type="warning" height="66rpx" :preventClick="true" @tap="buy">立即购买</tui-button>
 			</div>
 		</view>
 		<tui-drawer mode="bottom" :visible="bottomPopup" @close="closeDrawer">
@@ -99,19 +99,44 @@
 		},
 		methods: {
 			addProduct() {
-				if(this.number<1) {
+				if (this.number < 1) {
 					this.tui.toast('请至少选择1个商品', 3000);
 					return
 				}
-				this.tui.request(url.addToShopcart,'POST',{
+				this.tui.request(url.addToShopcart, 'POST', {
 					cartNumber: this.number,
-					productgId:this.productgId,
-				}).then(res=>{
+					productgId: this.productgId,
+				}).then(res => {
 					this.tui.toast('已成功加入购物车', 3000);
 				})
 			},
 			changeTab(val) {
 				this.currentTab = val.index
+			},
+			buy() {
+				if (this.number < 1) {
+					this.tui.toast('请至少选择1个商品', 3000);
+					return
+				}
+				this.$store.commit('setOrder', [{
+					cartNumber: this.number,
+					productgVo: {
+						productgId: this.productgId,
+						price: this.product.productgList.find(v => v.productgId === this.productgId).price,
+						attrList: this.product.productgList.find(v => v.productgId === this.productgId).attrList,
+						productVo: {
+							productId: this.product.productId,
+							productCode: this.product.productCode,
+							name: this.product.name,
+							brandId: this.product.brandId,
+							productUnit: this.product.productUnit,
+							fileRecordList: this.product.fileRecordList
+						}
+					}
+				}])
+				uni.navigateTo({
+					url: '../order/order'
+				})
 			},
 			changeProductg(key, val) {
 				this.attrMap[key] = val

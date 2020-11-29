@@ -1,7 +1,7 @@
 <template>
 	<view class="bg">
 		<view class="data-nav">
-			<view class="radio">
+			<view class="black">
 				<p>共 {{totalNumber}} 种商品</p>
 			</view>
 			<view class="confirm-view">
@@ -15,8 +15,9 @@
 				 class="product-img" @tap="goProduct(item.productgVo.productVo.productId)"></view>
 				<view class="product-right">
 					<view @tap="goProduct(item.productgVo.productVo.productId)">
-						<p class="fs16 radio">{{item.productgVo.productVo.name}}</p>
+						<p class="fs16 black">{{item.productgVo.productVo.name}}</p>
 						<p class="fs14 grey">{{item.productgVo.attrList.reduce((a,c)=>a+c.attrSonName,'')}}</p>
+						<p class="fs14 red">￥{{item.productgVo.price}}</p>
 					</view>
 					<view style="display:flex;justify-content: flex-end;">
 						<inputNumber @update="val=>changeNumber(val,item)" :number="item.cartNumber" :max="item.productgVo.totalStock" />
@@ -27,12 +28,12 @@
 		</view>
 		<view class="operation-nav">
 			<view>
-				<label class="radio" @tap="selectAllProduct">
+				<label class="black" @tap="selectAllProduct">
 					<radio :checked="selectAll" />全选</label>
 			</view>
 			<view class="confirm-view" v-if="mode==='buy'">
 				<p class="fs18">合计： <text class="price-text">￥{{totalPrice}}</text></p>
-				<tui-button margin="0 50rpx 0 30rpx" shape="circle" type="primary" width="170rpx" height="60rpx">结算</tui-button>
+				<tui-button margin="0 50rpx 0 30rpx" shape="circle" type="primary" width="170rpx" height="60rpx" @tap="goOrder">结算</tui-button>
 			</view>
 			<view class="confirm-view" v-if="mode==='manage'">
 				<tui-button margin="0 50rpx 0 30rpx" shape="circle" type="danger" width="170rpx" :disabled="shopcartList.length===0"
@@ -82,6 +83,21 @@
 			}
 		},
 		methods: {
+			goOrder() {
+				if (this.selectList.length === 0) {
+					this.tui.toast('请至少选择1个商品', 3000);
+					return
+				}
+				let list = []
+				this.selectList.forEach(v => {
+					const data = this.shopcartList.find(item => item.shopcartId === v)
+					list.push(data)
+				})
+				this.$store.commit('setOrder', list)
+				uni.navigateTo({
+					url: '../order/order'
+				})
+			},
 			selectProduct(row) {
 				const index = this.selectList.findIndex(v => v === row.shopcartId)
 				if (index !== -1) {
@@ -136,7 +152,7 @@
 						this.getList()
 						this.batchModal = false
 					})
-				}else {
+				} else {
 					this.batchModal = false
 				}
 
@@ -152,7 +168,7 @@
 						this.getList()
 						this.clearModal = false
 					})
-				}else {
+				} else {
 					this.clearModal = false
 				}
 
@@ -232,14 +248,6 @@
 			justify-content: space-between;
 			align-items: center;
 			border-bottom: 1px solid #ccc;
-		}
-
-		.radio {
-			color: #333;
-		}
-
-		.grey {
-			color: #888;
 		}
 
 		.confirm-view {
