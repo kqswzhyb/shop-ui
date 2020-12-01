@@ -41,6 +41,7 @@
 							mode: "user"
 						})
 						this.$store.commit('setUserInfo', result.data.info)
+						this.$store.commit('setAddress', res.data.address)
 						this.$store.commit('login')
 						this.tui.toast('登录成功', 3000);
 						uni.switchTab({

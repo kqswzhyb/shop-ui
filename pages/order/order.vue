@@ -15,7 +15,12 @@
 				</view>
 			</view>
 		</view>
-		<p>总额：<text>{{item.productTotalAmount}}</text> 实付额：<text>{{item.actualPayAmount}}</text></p>
+		<p class="fs14 px15">运费：<text class="red mr10">￥{{detail.freight}}</text> 总额：<text class="red">￥{{detail.productTotalAmount}}</text>
+			<text class="grey" v-if="detail.orderStatus">实付额：￥{{detail.actualPayAmount}}</text></p>
+		<view class="submit-view">
+			<tui-button margin="0 50rpx 0 30rpx" shape="circle" type="primary" width="170rpx" height="60rpx" @tap="submitOrder">提交订单</tui-button>
+		</view>
+
 	</view>
 </template>
 
@@ -23,6 +28,7 @@
 	import {
 		mapGetters
 	} from 'vuex'
+	import url from '../../api/index'
 	export default {
 		data() {
 			return {
@@ -41,8 +47,9 @@
 					contactName: "",
 					contactPhone: "",
 					freight: "",
-					productTotalAmount: "",
-					actualPayAmount: "",
+					productTotalAmount: 0,
+					orderTotalAmount: 0,
+					actualPayAmount: 0,
 					remark: "",
 					paymentMethod: "",
 					isInvoice: "",
@@ -52,7 +59,7 @@
 			};
 		},
 		computed: {
-			...mapGetters(["order", "address"]),
+			...mapGetters(["order", "address", "userInfo"]),
 		},
 		watch: {
 			order: {
@@ -73,9 +80,32 @@
 					}
 				},
 				immediate: true
+			},
+			'detail.orderDetailList': {
+				handler(val) {
+					if (val) {
+						this.detail.productTotalAmount = val.reduce((a, c) => a + c.originPrice * c.productNum, 0)
+						if (this.detail.productTotalAmount >= 100) {
+							this.detail.freight = 0
+						} else {
+							this.detail.freight = 10
+						}
+					}
+				},
+				immediate: true,
+				deep: true
 			}
 		},
-		methods: {},
+		methods: {
+			submitOrder() {
+				this.detail.isInvoice = "0"
+				this.detail.paymentMethod = "0"
+				this.detail.actualPayAmount = 0
+				this.tui.request(url.addOrder, "POST", this.detail).then(res => {
+					this.tui.toast('已提交订单请尽快付款', 3000);
+				})
+			}
+		},
 		onLoad() {
 			if (this.address.length !== 0) {
 				const data = this.address[0]
@@ -88,6 +118,8 @@
 				this.detail.cityName = data.cityName
 				this.detail.areaName = data.areaName
 				this.detail.addressDetail = data.addressDetail
+				this.detail.userId = this.userInfo.userId
+				this.detail.userName = this.userInfo.userName
 			}
 		}
 	}
@@ -129,6 +161,15 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
+		}
+
+		.submit-view {
+			width: 100%;
+			margin-top: 40rpx;
+			height: 80rpx;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
 		}
 	}
 </style>

@@ -5,17 +5,16 @@
 				<view class="avatar-view" @tap="goLogin">
 					<image class="avatar" src="" mode="aspectFit"></image>
 				</view>
-				
+
 				<text @tap="goLogin">{{isLogin?userInfo.nickName:'请先登录'}}</text>
 			</view>
-			<tui-icon name="house" size="25" class="mr40" color="#fff" @tap="goAddress"/>
-			
+			<tui-icon name="house" size="25" class="mr40" color="#fff" @tap="goAddress" />
+
 		</view>
 		<tui-tabs :tabs="navbar" :currentTab="currentTab" selectedColor="#EB0909" sliderBgColor="#EB0909" @change="changeTab"></tui-tabs>
 		<view class="list-view" v-for="item in orderList" :key="item.orderId">
-			<view class="list-cell" v-for="v in orderDetailList" :key="v.orderDetailId">
-				<view :style="{background:`url(${v.imgUrl}) no-repeat center center`}"
-				 class="product-img" @tap="goProduct(v.productId)"></view>
+			<view class="list-cell" v-for="v in item.orderDetailList" :key="v.orderDetailId">
+				<view :style="{background:`url(${v.imgUrl}) no-repeat center center`}" class="product-img" @tap="goProduct(v.productId)"></view>
 				<view class="product-right">
 					<view @tap="goProduct(v.productId)">
 						<p class="fs16 radio">{{v.productName}}</p>
@@ -24,10 +23,11 @@
 					</view>
 				</view>
 			</view>
-			<p>总额：<text>{{item.productTotalAmount}}</text> 实付额：<text>{{item.actualPayAmount}}</text></p>
+			<p class="fs14 px15">运费：<text class="red mr10">￥{{item.freight}}</text> 总额：<text class="red mr10">￥{{item.productTotalAmount}}</text>
+				<text class=" mr10" v-if="item.orderStatus">实付额：￥{{item.actualPayAmount}}</text> <text>{{item.orderStatus}}</text></p>
 		</view>
 		<view class="order-list">
-			<noData/>
+			<noData />
 		</view>
 	</view>
 </template>
@@ -37,8 +37,9 @@
 		mapGetters
 	} from 'vuex'
 	import noData from '../../components/noData'
+	import url from '../../api/index'
 	export default {
-		components:{
+		components: {
 			noData
 		},
 		data() {
@@ -48,18 +49,25 @@
 					name: "待付款"
 				}, {
 					name: "待发货"
-				},{
+				}, {
 					name: "待收货"
 				}, {
 					name: "已完成"
 				}],
-				orderList:[]
+				orderList: []
 			};
 		},
 		computed: {
 			...mapGetters(['isLogin', "userInfo"])
 		},
-		onLoad() {},
+		onLoad() {
+			if (this.isLogin) {
+				this.tui.request(url.getOrderList, "GET").then(res => {
+					this.orderList = res.data.records
+					console.log(this.orderList)
+				})
+			}
+		},
 		methods: {
 			goAddress() {
 				if (this.isLogin) {
@@ -91,6 +99,7 @@
 	.bg {
 		background-color: #f7f7f7;
 	}
+
 	.user-info {
 		width: 100vw;
 		padding: 30rpx;
@@ -113,14 +122,16 @@
 
 		}
 	}
+
 	.order-list {
 		height: calc(100vh - 294rpx);
 	}
+
 	.list-view {
-		margin: 88rpx 20rpx;
+		// margin: 88rpx 20rpx;
 		height: calc(100vh - 176rpx);
 		padding: 2rpx 0;
-	
+
 		.list-cell {
 			margin-top: 20rpx;
 			display: flex;
@@ -128,17 +139,17 @@
 			padding: 16rpx;
 			background-color: #fff;
 			border-radius: 20rpx;
-	
+
 			.product-img {
-				width: 33vw;
-				height: 33vw;
-				background-size: 30% 30%;
+				width: 22vw;
+				height: 22vw;
+				background-size: 20% 20%;
 				border-radius: 20rpx;
 				margin-right: 20rpx;
 			}
-	
+
 			.product-right {
-				height: 33vw;
+				height: 22vw;
 				flex: 1;
 				padding: 10rpx 0;
 				display: flex;

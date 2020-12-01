@@ -15,5 +15,9 @@ export default {
 		addAddress:"/user/saveAddress",
 		updateAddress:"/user/updateAddress",
 		deleteAddress:"/user/deleteAddressById",
-		getAddressById:"/user/address/"
+		getAddressById:"/user/address/",
+		getOrderList:"/order/list",
+		addOrder:"/order/save",
+		updateOrder:"/order/updateOrder",
+		updateOrderStatus:"/order/updateStatus",
 	}
