@@ -20,4 +20,5 @@ export default {
 		addOrder:"/order/save",
 		updateOrder:"/order/updateOrder",
 		updateOrderStatus:"/order/updateStatus",
+		getCaptcha:"/captcha/new"
 	}
